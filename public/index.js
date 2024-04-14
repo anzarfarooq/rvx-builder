@@ -86,14 +86,6 @@ function setPatches() {
     x.getAttribute('data-patch-name')
   );
 
-  if (selectedPatchList.includes('Enable debugging') || selectedPatchList.includes('Enable debug logging')) {
-    const confirmDebug = confirm(
-      '**Included the "Enable Debugging" Patch**\n***Are you sure?***\nit\'s only for debugging purposes.'
-    );
-
-    if (!confirmDebug) return;
-  }
-
   sendCommand({
     event: 'selectPatches',
     selectedPatches: selectedPatchList,
@@ -284,14 +276,64 @@ function setSources() {
   const integrationsSrc = document.getElementById('integrations-src').value;
   const integrations = `${integrationsOrg}/${integrationsSrc}`;
 
+  const microgOrg = document.getElementById('microg-org').value;
+  const microgSrc = document.getElementById('microg-src').value;
+  const microg = `${microgOrg}/${microgSrc}`;
+
+  const prereleases = document.getElementById('pre-releases').value + '';
+
   sendCommand({
     event: 'setSettings',
     settings: {
       cli,
       patches,
-      integrations
+      integrations,
+      microg,
+      prereleases
     }
   });
+}
+
+function setSourcesRVX() {
+  document.getElementById('cli-org').value = 'inotia00';
+  document.getElementById('cli-src').value = 'revanced-cli';
+
+  document.getElementById('patch-org').value = 'inotia00';
+  document.getElementById('patch-src').value = 'revanced-patches';
+
+  document.getElementById('integrations-org').value = 'inotia00';
+  document.getElementById('integrations-src').value = 'revanced-integrations';
+
+  document.getElementById('microg-org').value = 'inotia00';
+  document.getElementById('microg-src').value = 'VancedMicroG';
+
+  setSources();
+}
+
+function setSourcesReX() {
+  document.getElementById('cli-org').value = 'inotia00';
+  document.getElementById('cli-src').value = 'revanced-cli';
+
+  document.getElementById('patch-org').value = 'YT-Advanced';
+  document.getElementById('patch-src').value = 'ReX-patches';
+
+  document.getElementById('integrations-org').value = 'YT-Advanced';
+  document.getElementById('integrations-src').value = 'ReX-integrations';
+
+  setSources();
+}
+
+function setSourcesRVX_anddea() {
+  document.getElementById('cli-org').value = 'inotia00';
+  document.getElementById('cli-src').value = 'revanced-cli';
+
+  document.getElementById('patch-org').value = 'anddea';
+  document.getElementById('patch-src').value = 'revanced-patches';
+
+  document.getElementById('integrations-org').value = 'anddea';
+  document.getElementById('integrations-src').value = 'revanced-integrations';
+
+  setSources();
 }
 
 ws.onmessage = (msg) => {
@@ -652,6 +694,8 @@ ws.onmessage = (msg) => {
       const cli = message.settings.cli.split('/');
       const patches = message.settings.patches.split('/');
       const integrations = message.settings.integrations.split('/');
+      const microg = message.settings.microg.split('/');
+      const prereleases = message.settings.prereleases;
 
       const cliOrg = document.getElementById('cli-org');
       const cliSrc = document.getElementById('cli-src');
@@ -670,6 +714,19 @@ ws.onmessage = (msg) => {
 
       integrationsOrg.value = integrations[0];
       integrationsSrc.value = integrations[1];
+
+      const microgOrg = document.getElementById('microg-org');
+      const microgSrc = document.getElementById('microg-src');
+
+      microgOrg.value = microg[0];
+      microgSrc.value = microg[1];
+
+      const preReleases = document.getElementById('pre-releases');
+      if (typeof prereleases === 'undefined') {
+          preReleases.value = 'false';
+      } else {
+          preReleases.value = prereleases;
+      }
     }
   }
 };
